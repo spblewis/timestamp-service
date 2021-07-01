@@ -24,9 +24,24 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+
+// The timestamp api itself
 app.get("/api/:date?", (req, res) => {
-  
+
+  // if date is undefined, set it to now
+  if (!req.params.date) {
+    req.params.date = Date.now();
+  }
+
+  // If date is a numerical string, convert to a number
+  if (!isNaN(+req.params.date)) {
+    req.params.date = +req.params.date;
+  }
+
+  // Convert to a date object
   const date = new Date(req.params.date);
+
+  // Check validity, return json for either an error or a timestamp as expected
   if (date.toString() === "Invalid Date") {
     res.json({
       error: date.toString()
